@@ -5,19 +5,23 @@ import com.multibot.multiple.LLM.model.ChatResponse;
 import com.multibot.multiple.LLM.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*") // Allow frontend to access
+@CrossOrigin(origins = "*")
 public class ChatController {
 
     @Autowired
     private ChatService chatService;
 
     @PostMapping("/chat")
-    public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest chatRequest) {
+    public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest chatRequest, Authentication authentication) {
         try {
+            String username = authentication != null ? authentication.getName() : "Anonymous";
+            System.out.println("Chat request from user: " + username);
+
             String response = chatService.getChatResponse(chatRequest.getMessage());
             return ResponseEntity.ok(new ChatResponse(true, response));
 
@@ -27,9 +31,16 @@ public class ChatController {
         }
     }
 
-    // Health check endpoint
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Server is running!");
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<String> getCurrentUser(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return ResponseEntity.ok(authentication.getName());
+        }
+        return ResponseEntity.ok("Anonymous");
     }
 }
