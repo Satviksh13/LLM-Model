@@ -41,7 +41,13 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user1, admin, test);
+        UserDetails satvik = User.builder()
+                .username("satvik")
+                .password(passwordEncoder().encode("Onetonine"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user1, admin, test , satvik);
     }
 
     @Bean

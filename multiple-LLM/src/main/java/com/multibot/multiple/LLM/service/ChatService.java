@@ -9,7 +9,7 @@ import java.util.*;
 @Service
 public class ChatService {
 
-    @Value("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")
+    @Value("${OPEN_API_KEY}")
     private String apiKey;
 
     public String getChatResponse(String message) {
