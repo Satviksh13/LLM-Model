@@ -9,7 +9,7 @@ import java.util.*;
 @Service
 public class ChatService {
 
-    @Value("${OPEN_API_KEY}")
+    @Value("${openrouter.api.key}")
     private String apiKey;
 
     public String getChatResponse(String message) {
